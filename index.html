@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>body{margin:0}</style>
+</head>
+<body>
+<title>Maison Apex</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=DM+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: wide container (1160px) on desktop, single column on phones. Fixed header with nav, hero with a floating site showcase, bento services, interactive examples, offers, process, two-column contact with the form. Single dark look: black, gold, bone. */
+:root {
+  --ink: #0c0b0a;
+  --panel: #151311;
+  --line: #2b2620;
+  --paper: #f3ece0;
+  --muted: #a89f90;
+  --gold: #c9a45c;
+  --gold-deep: #8f7239;
+  --sheen: #f4e2b0;
+  --danger: #e08a7a;
+  --glow: rgba(201, 164, 92, 0.15);
+  --head: 64px;
+  --display: "Bodoni Moda", "Didot", "Times New Roman", serif;
+  --body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (max-width: 639px) { .tools .btn { display: none; } }
+body {
+  background: var(--ink); color: var(--paper); font-family: var(--body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: calc(var(--head) + 20px) 110px;
+  overflow-x: clip;
+}
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.container { max-width: 1160px; margin: 0 auto; width: 100%; }
+main { position: relative; z-index: 1; display: flex; flex-direction: column; gap: clamp(72px, 10vw, 128px); }
+.label { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
+.note { font-size: 13px; color: var(--muted); }
+
+/* Background layers */
+#field { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; opacity: .55; }
+.glow { position: fixed; left: 0; top: 0; width: 620px; height: 620px; max-width: 150vw; pointer-events: none; z-index: 0;
+  background: radial-gradient(circle, var(--glow), transparent 65%);
+  transform: translate(var(--gx, 70vw), var(--gy, 18vh)) translate(-50%, -50%); transition: transform 0.9s cubic-bezier(.2,.7,.2,1); }
+
+/* Header */
+.top { position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  padding: env(safe-area-inset-top, 0px) max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
+  background: rgba(12,11,10,.7); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent; transition: border-color .3s, background .3s; }
+.top.scrolled { border-bottom-color: var(--line); background: rgba(12,11,10,.86); }
+.top-in { max-width: 1160px; margin: 0 auto; height: var(--head); display: flex; align-items: center; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand img { height: 32px; width: auto; flex: none; }
+.brand b { font-family: var(--display); font-weight: 500; font-size: 15px; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap; }
+.nav { margin-left: auto; display: none; gap: 4px; }
+.nav a { position: relative; padding: 8px 12px; text-decoration: none; font-size: 14px; color: var(--muted); transition: color .2s; }
+.nav a::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 2px; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+.nav a:hover, .nav a.active { color: var(--paper); }
+.nav a:hover::after, .nav a.active::after { transform: scaleX(1); }
+.tools { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--sheen)); transform-origin: left; transform: scaleX(var(--p, 0)); pointer-events: none; }
+@media (min-width: 860px) { .nav { display: flex; } .tools { margin-left: 0; } }
+
+.snd { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px; border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 999px; cursor: pointer; font: 500 13px var(--body); transition: color .25s, border-color .25s; }
+.snd[aria-pressed="true"] { color: var(--gold); border-color: var(--gold-deep); }
+.snd.hint { animation: hint 2.6s ease-in-out infinite; }
+@keyframes hint { 0%, 100% { box-shadow: 0 0 0 0 rgba(201,164,92,.45); } 60% { box-shadow: 0 0 0 10px rgba(201,164,92,0); } }
+.eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
+.eq i { width: 2px; height: 100%; background: currentColor; transform: scaleY(.25); transform-origin: bottom; }
+.snd[aria-pressed="true"] .eq i { animation: eq .9s ease-in-out infinite; }
+.snd[aria-pressed="true"] .eq i:nth-child(2) { animation-delay: .2s; }
+.snd[aria-pressed="true"] .eq i:nth-child(3) { animation-delay: .4s; }
+@keyframes eq { 0%, 100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 26px; border-radius: 2px; font-weight: 600; font-size: 15px; letter-spacing: 0.02em; text-decoration: none; border: 1px solid var(--gold); cursor: pointer; font-family: var(--body); position: relative; overflow: hidden; transition: background .3s, color .3s, border-color .3s; }
+.btn.solid { background: var(--gold); color: var(--ink); }
+.btn.ghost { background: transparent; color: var(--paper); }
+.btn.ghost:hover { background: rgba(201,164,92,.1); }
+.btn.sm { min-height: 40px; padding: 0 18px; font-size: 14px; }
+.btn.solid::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%); transform: translateX(-130%); animation: sweep 5s 1.8s ease-in-out infinite; }
+@keyframes sweep { 0%, 55% { transform: translateX(-130%); } 100% { transform: translateX(130%); } }
+.btn:disabled { opacity: .6; cursor: progress; }
+
+/* Hero */
+.hero { display: grid; grid-template-columns: 1fr; gap: 44px; align-items: center; padding-block: 24px 8px; }
+@media (min-width: 960px) { .hero { grid-template-columns: 1.02fr 1fr; gap: 56px; padding-block: 48px 8px; } }
+.hero-copy { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.hero h1 { font-size: clamp(40px, 7vw, 78px); line-height: 1.03; letter-spacing: -0.01em; }
+.w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-right: .2em; }
+.w > i { display: inline-block; font-style: normal; }
+.hero h1 .w > i { transform: translateY(108%); animation: wordUp .95s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(.2s + var(--i) * .08s); }
+@keyframes wordUp { to { transform: none; } }
+.hero h1 .g { font-style: italic; color: var(--gold);
+  background: linear-gradient(100deg, var(--gold) 0%, var(--gold) 38%, var(--sheen) 50%, var(--gold) 62%, var(--gold) 100%);
+  background-size: 250% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  animation: wordUp .95s cubic-bezier(.2,.8,.2,1) forwards, shine 6s ease-in-out 1.8s infinite; animation-delay: calc(.2s + var(--i) * .08s), 1.8s; }
+@keyframes shine { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 0; } }
+.hero p.lead { color: var(--muted); font-size: clamp(16px, 1.6vw, 19px); max-width: 52ch; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; list-style: none; margin: 0; padding: 0; font-size: 13px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+.facts li::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); margin-right: 10px; vertical-align: 1px; }
+
+/* Showcase: the site we sell, floating in 3D and scrolling by itself */
+.stage { position: relative; container-type: inline-size; aspect-ratio: 1.1 / 1; width: 100%; perspective: 1500px; }
+.stage-in { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+.browser { position: absolute; left: 0; top: 3%; width: 88%; font-size: clamp(7px, 2cqw, 13px); background: #100e0c; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(201,164,92,.08); animation: floatA 8s ease-in-out infinite; }
+.bar { height: 2.6em; display: flex; align-items: center; gap: .55em; padding: 0 1em; border-bottom: 1px solid var(--line); background: #0f0d0b; }
+.bar i { width: .8em; height: .8em; border-radius: 50%; background: #2b2620; }
+.bar i:first-child { background: var(--gold-deep); }
+.bar .url { margin-left: 1em; flex: 1; font-size: .85em; color: var(--muted); border: 1px solid var(--line); padding: .25em .9em; letter-spacing: .04em; }
+.screen { height: 27em; overflow: hidden; position: relative; }
+.scroller { will-change: transform; animation: scrollA 20s ease-in-out infinite; }
+@keyframes scrollA { 0%, 8% { transform: translateY(0); } 46%, 56% { transform: translateY(var(--travel, -55%)); } 94%, 100% { transform: translateY(0); } }
+.phone { position: absolute; right: 0; bottom: 0; width: 31%; aspect-ratio: 9 / 18.2; font-size: clamp(6px, 1.55cqw, 11px); background: #0b0a09; border: 1px solid #3a3228; border-radius: 2.4em; padding: .7em; box-shadow: 0 30px 70px rgba(0,0,0,.65); transform: translateZ(70px); animation: floatB 7s ease-in-out .8s infinite; }
+.phone .screen { height: 100%; border-radius: 1.8em; background: #100e0c; }
+.phone .notch { position: absolute; z-index: 2; top: .9em; left: 50%; width: 28%; height: .9em; background: #0b0a09; border-radius: 1em; transform: translateX(-50%); }
+.phone .scroller { animation-duration: 16s; animation-delay: 1.5s; padding-top: 2.2em; }
+@keyframes floatA { 0%, 100% { transform: translateY(0) translateZ(0); } 50% { transform: translateY(-1.6%) translateZ(0); } }
+@keyframes floatB { 0%, 100% { transform: translateY(0) translateZ(70px); } 50% { transform: translateY(-3%) translateZ(70px); } }
+.stage-tag { position: absolute; left: 0; bottom: 2%; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); border-left: 1px solid var(--gold); padding-left: 12px; max-width: 48%; line-height: 1.5; }
+.m-nav { display: flex; align-items: center; gap: 1.6em; padding: 1em 1.4em; border-bottom: 1px solid #2b2620; }
+.m-nav b { font-family: var(--display); letter-spacing: .2em; margin-right: auto; color: var(--gold); font-weight: 500; }
+.m-nav span { color: #a89f90; font-size: .9em; }
+.m-hero { padding: 3.2em 1.6em; background: radial-gradient(circle at 82% 18%, rgba(201,164,92,.3), transparent 55%), #13100d; display: flex; flex-direction: column; gap: 1em; align-items: flex-start; }
+.m-hero small { letter-spacing: .2em; text-transform: uppercase; color: var(--gold); font-size: .8em; }
+.m-hero h4 { font-size: 2.6em; line-height: 1.05; max-width: 9em; }
+.m-btn { background: var(--gold); color: #0c0b0a; padding: .7em 1.3em; font-weight: 600; font-size: .9em; }
+.m-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1em; padding: 1.4em; }
+.m-grid.one { grid-template-columns: 1fr; padding: 1.1em; }
+.m-card { display: flex; flex-direction: column; gap: .35em; font-size: .9em; }
+.m-card b { font-weight: 600; }
+.m-card span { color: #a89f90; font-size: .9em; }
+.m-img { aspect-ratio: 4 / 3; position: relative; overflow: hidden; }
+.m-img::after { content: ""; position: absolute; left: -10%; right: -10%; top: 58%; height: 2px; background: rgba(255,255,255,.35); transform: rotate(-8deg); }
+.g1 { background: linear-gradient(135deg, #1c1812, #5a4622 55%, #c9a45c); }
+.g2 { background: linear-gradient(135deg, #14110e, #3a3a44 55%, #9aa0b4); }
+.g3 { background: linear-gradient(135deg, #1a1210, #6a2a22 55%, #d98a6c); }
+.m-strip { margin: 0 1.4em; padding: 1.1em; border: 1px solid #2b2620; text-align: center; letter-spacing: .14em; text-transform: uppercase; font-size: .75em; color: var(--gold); }
+.m-foot { padding: 2em 1.4em; color: #a89f90; font-size: .85em; border-top: 1px solid #2b2620; }
+.phone .m-hero { padding: 2.2em 1.2em; }
+.phone .m-hero h4 { font-size: 2em; }
+
+/* Section heads and reveals */
+.sec { display: flex; flex-direction: column; gap: 32px; scroll-margin-top: calc(var(--head) + env(safe-area-inset-top, 0px) + 12px); }
+.head { display: flex; flex-direction: column; gap: 14px; max-width: 760px; }
+.head h2 { font-size: clamp(30px, 5vw, 54px); line-height: 1.08; }
+.sp .w > i { transform: none; }
+html.js .sp .w > i { transform: translateY(108%); transition: transform .95s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) * .05s); }
+html.js .sp.in .w > i { transform: none; }
+html.js .rv { opacity: 0; transform: translateY(30px); transition: opacity .9s cubic-bezier(.2,.7,.2,1) var(--d, 0s), transform .9s cubic-bezier(.2,.7,.2,1) var(--d, 0s); }
+html.js .rv.in { opacity: 1; transform: perspective(900px) rotateX(var(--tx, 0deg)) rotateY(var(--ty, 0deg)); }
+html.js .rv.in.done { transition: transform .25s ease-out, border-color .3s, box-shadow .3s, background .3s; }
+
+/* Cards with tilt and light */
+.tilt { position: relative; }
+.tilt::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(201,164,92,.18), transparent 60%); opacity: 0; transition: opacity .3s; }
+.tilt:hover::before { opacity: 1; }
+
+/* Services */
+.bento { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 700px) { .bento { grid-template-columns: repeat(6, 1fr); } .svc:nth-child(-n+3) { grid-column: span 2; } .svc:nth-child(n+4) { grid-column: span 3; } }
+.svc { background: var(--panel); border: 1px solid var(--line); padding: 28px; display: flex; flex-direction: column; gap: 12px; min-height: 230px; overflow: hidden; min-width: 0; }
+.svc:hover { border-color: var(--gold-deep); }
+.svc h3 { font-size: 24px; }
+.svc p { color: var(--muted); font-size: 15px; }
+.ic { width: 38px; height: 38px; fill: none; stroke: var(--gold); stroke-width: 1.4; stroke-linejoin: round; stroke-linecap: round; }
+.ic * { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.svc:hover .ic *, .svc.in .ic * { animation: draw 1.3s cubic-bezier(.6,.1,.2,1) both; }
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* Examples */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+.tab { min-height: 44px; padding: 0 20px; background: transparent; border: 1px solid var(--line); color: var(--paper); border-radius: 999px; font-family: var(--body); font-size: 14px; cursor: pointer; transition: background .25s, color .25s, border-color .25s, transform .2s; }
+.tab:hover { border-color: var(--gold-deep); }
+.tab[aria-selected="true"] { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+.ex { display: grid; grid-template-columns: 1fr; gap: 28px; align-items: start; }
+@media (min-width: 900px) { .ex { grid-template-columns: 340px 1fr; gap: 48px; } .ex.solo { grid-template-columns: 1fr; } }
+.reel { margin: 0 auto; width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
+@media (min-width: 900px) { .reel { margin: 0; position: sticky; top: calc(var(--head) + env(safe-area-inset-top, 0px) + 24px); } }
+.reel-frame { position: relative; aspect-ratio: 9 / 16; background: var(--panel); border: 1px solid var(--gold-deep); border-radius: 26px; overflow: hidden; box-shadow: 0 30px 70px rgba(0,0,0,.55); }
+.reel-frame video { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .16s; }
+.reel-frame video.swap { opacity: 0; }
+.reel-badge { position: absolute; left: 12px; bottom: 12px; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; background: rgba(12,11,10,.72); border: 1px solid var(--line); padding: 4px 10px; }
+.reel-btn { position: absolute; right: 12px; bottom: 12px; min-height: 36px; padding: 0 14px; background: rgba(12,11,10,.72); color: var(--paper); border: 1px solid var(--line); cursor: pointer; font: 500 12px var(--body); letter-spacing: .08em; text-transform: uppercase; }
+.reel-btn:hover { border-color: var(--gold); }
+.reel figcaption { font-size: 13px; color: var(--muted); }
+.demo { display: grid; grid-template-columns: 1fr; gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--line); padding: 22px 24px; display: flex; flex-direction: column; gap: 10px; min-width: 0; animation: slideIn .6s cubic-bezier(.2,.7,.2,1) both; }
+.card:nth-child(2) { animation-delay: .1s; }
+.card:nth-child(3) { animation-delay: .2s; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(20px) scale(.985); } to { opacity: 1; transform: none; } }
+.card .tag { align-self: flex-start; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; border: 1px solid var(--gold-deep); color: var(--gold); padding: 2px 8px; }
+.card h3 { font-size: 22px; line-height: 1.25; }
+.card p, .card li { color: var(--muted); font-size: 15px; }
+.card ul, .card ol { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+.card .hash { color: var(--gold); font-size: 14px; overflow-wrap: anywhere; }
+.rest { opacity: 0; }
+.caret::after { content: ""; display: inline-block; width: 1px; height: 1em; background: var(--gold); margin-left: 2px; vertical-align: -.15em; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Videos */
+.videos { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+.videos figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.videos video { width: 100%; aspect-ratio: 9 / 16; background: var(--panel); border: 1px solid var(--line); object-fit: cover; }
+.videos figcaption { font-size: 13px; color: var(--muted); }
+
+/* Marquees */
+.band { display: flex; flex-direction: column; gap: 10px; }
+.marquee { overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent); }
+.marquee .track { display: flex; gap: 10px; width: max-content; animation: slide 40s linear infinite; }
+.marquee.rev .track { animation-direction: reverse; animation-duration: 52s; }
+.marquee:hover .track { animation-play-state: paused; }
+.pill { border: 1px solid var(--line); padding: 10px 22px; font-size: 15px; border-radius: 999px; white-space: nowrap; transition: border-color .25s, color .25s; }
+.pill:hover { border-color: var(--gold); color: var(--gold); }
+.marquee.rev .pill { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--gold); border-color: transparent; }
+@keyframes slide { to { transform: translateX(calc(-50% - 5px)); } }
+
+/* Offers */
+.offers { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .offers { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1040px) { .offers { grid-template-columns: repeat(4, 1fr); } }
+.offer { background: var(--panel); border: 1px solid var(--line); padding: 26px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.offer:hover { border-color: var(--gold-deep); box-shadow: 0 18px 44px rgba(0,0,0,.5); }
+.offer.feature { border: 1px solid transparent;
+  background: linear-gradient(var(--panel), var(--panel)) padding-box, linear-gradient(120deg, var(--gold-deep), var(--sheen), var(--gold-deep), var(--sheen)) border-box;
+  background-size: 100% 100%, 300% 100%; animation: borderflow 7s linear infinite; }
+@keyframes borderflow { from { background-position: 0 0, 0% 0; } to { background-position: 0 0, 300% 0; } }
+.offer h3 { font-size: 24px; }
+.offer .flag { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+.price { font-family: var(--display); font-size: clamp(28px, 3vw, 34px); color: var(--gold); line-height: 1.15; font-variant-numeric: tabular-nums; }
+.price small { display: block; font-family: var(--body); font-size: 13px; color: var(--muted); letter-spacing: 0.02em; }
+.offer p { color: var(--muted); font-size: 15px; flex: 1; }
+.pick { align-self: flex-start; margin-top: 6px; min-height: 44px; padding: 0 20px; background: transparent; color: var(--gold); border: 1px solid var(--gold-deep); cursor: pointer; font-family: var(--body); font-size: 14px; font-weight: 500; transition: background .25s, color .25s, border-color .25s; }
+.pick:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+/* Process */
+.steps { display: grid; gap: 16px; grid-template-columns: 1fr; position: relative; }
+@media (min-width: 860px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+.step { padding: 26px; border: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; gap: 10px; }
+.step .n { font-family: var(--display); font-size: 64px; line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--gold); transition: color .9s .35s; }
+html:not(.js) .step .n, .step.in .n { color: var(--gold); }
+.step h3 { font-size: 22px; font-family: var(--body); font-weight: 600; }
+.step p { color: var(--muted); font-size: 15px; }
+
+/* Contact */
+.contact-grid { display: grid; gap: 36px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 960px) { .contact-grid { grid-template-columns: .85fr 1.15fr; gap: 64px; } }
+.pitch { display: flex; flex-direction: column; gap: 22px; }
+.pitch ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.pitch li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; color: var(--muted); }
+.pitch li::before { content: ""; width: 8px; height: 8px; margin-top: 9px; background: var(--gold); transform: rotate(45deg); }
+.pitch .direct { display: flex; flex-direction: column; gap: 4px; padding-top: 18px; border-top: 1px solid var(--line); }
+.pitch .direct a { text-decoration: none; font-size: 18px; overflow-wrap: anywhere; }
+.pitch .direct a:hover { color: var(--gold); }
+.form-card { background: var(--panel); border: 1px solid var(--line); padding: clamp(20px, 3vw, 34px); display: flex; flex-direction: column; gap: 18px; }
+form { display: flex; flex-direction: column; gap: 16px; }
+.row2 { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 600px) { .row2 { grid-template-columns: 1fr 1fr; } }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field > label, fieldset legend { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+input[type="text"], select, textarea { width: 100%; min-height: 48px; background: var(--ink); color: var(--paper); border: 1px solid var(--line); border-radius: 2px; padding: 12px 14px; font-family: var(--body); font-size: 16px; transition: border-color .25s, box-shadow .25s; }
+textarea { min-height: 96px; resize: vertical; }
+input::placeholder, textarea::placeholder { color: #6f675b; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,164,92,.18); }
+.checks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.checks label { position: relative; }
+.checks input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.checks span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border: 1px solid var(--line); border-radius: 999px; font-size: 14px; transition: background .25s, color .25s, border-color .25s; }
+.checks input:checked + span { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+.checks input:focus-visible + span { outline: 2px solid var(--gold); outline-offset: 2px; }
+.err { color: var(--danger); font-size: 13px; min-height: 1em; }
+.result { background: var(--ink); border: 1px solid var(--gold-deep); padding: 22px; display: flex; flex-direction: column; gap: 14px; }
+.result h3 { font-size: 24px; }
+.result textarea { min-height: 150px; font-size: 14px; }
+.result ol { margin: 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
+.result .row { display: flex; flex-wrap: wrap; gap: 10px; }
+.sparkle { position: fixed; z-index: 90; width: 6px; height: 6px; background: var(--gold); transform: rotate(45deg); pointer-events: none; }
+
+/* Footer */
+.foot { border-top: 1px solid var(--line); padding-top: 40px; display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center; overflow: hidden; }
+.big { width: min(560px, 86%); height: auto; opacity: 0; transform: scale(.94); clip-path: inset(0 100% 0 0); }
+.foot.in .big { opacity: 1; transform: none; clip-path: inset(0 0 0 0); transition: clip-path 1.6s cubic-bezier(.6,.1,.2,1), opacity 1s, transform 1.6s cubic-bezier(.2,.7,.2,1); }
+html:not(.js) .big { opacity: 1; transform: none; clip-path: none; }
+.foot small { font-size: 12px; color: var(--muted); letter-spacing: .08em; }
+
+/* Sticky call to action (phones) */
+.cta { position: fixed; left: 0; right: 0; bottom: 0; z-index: 35; display: flex; justify-content: center;
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(to top, var(--ink) 55%, rgba(12,11,10,0)); transition: transform .3s, opacity .3s; }
+.cta.off { transform: translateY(100%); opacity: 0; pointer-events: none; }
+.cta .btn { width: 100%; max-width: 640px; box-shadow: 0 6px 24px rgba(0,0,0,.5); animation: pulse 3.2s 2s infinite; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 6px 24px rgba(0,0,0,.5), 0 0 0 0 rgba(201,164,92,.5); } 60% { box-shadow: 0 6px 24px rgba(0,0,0,.5), 0 0 0 14px rgba(201,164,92,0); } }
+@media (min-width: 861px) { .cta { display: none; } body { padding-bottom: 48px; } }
+
+/* Automation demo */
+.more { align-self: flex-start; color: var(--gold); text-decoration: none; font-size: 14px; border-bottom: 1px solid var(--gold-deep); padding-bottom: 2px; margin-top: 4px; }
+.more:hover { border-color: var(--gold); }
+.auto-grid { display: grid; grid-template-columns: 1fr; gap: 32px; align-items: start; }
+@media (min-width: 900px) { .auto-grid { grid-template-columns: minmax(340px, 430px) 1fr; gap: 56px; } }
+.chat { width: 100%; max-width: 440px; margin: 0 auto; background: var(--panel); border: 1px solid var(--gold-deep); border-radius: 22px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 30px 70px rgba(0,0,0,.5); }
+@media (min-width: 900px) { .chat { margin: 0; } }
+.chat-head { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--line); background: #12100e; }
+.chat-head img { height: 28px; width: auto; }
+.chat-head b { display: block; font-size: 15px; }
+.chat-head small { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+.live { width: 7px; height: 7px; border-radius: 50%; background: #7fbf8a; animation: blink 2.4s infinite; }
+.replay { margin-left: auto; min-height: 36px; padding: 0 14px; background: transparent; color: var(--gold); border: 1px solid var(--gold-deep); cursor: pointer; font: 500 12px var(--body); letter-spacing: .08em; text-transform: uppercase; }
+.replay:hover { border-color: var(--gold); }
+.chat-body { height: 440px; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; scrollbar-width: none; }
+.chat-body::-webkit-scrollbar { display: none; }
+.msg { max-width: 86%; padding: 12px 14px; font-size: 15px; line-height: 1.45; animation: popIn .35s cubic-bezier(.2,.8,.2,1) both; }
+.msg.a { align-self: flex-start; background: #1d1a16; border: 1px solid var(--line); border-radius: 4px 16px 16px 16px; }
+.msg.c { align-self: flex-end; background: var(--gold); color: var(--ink); border-radius: 16px 4px 16px 16px; font-weight: 500; }
+.msg.typing { display: flex; gap: 5px; padding: 15px 16px; }
+.typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: bounce 1s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; }
+.typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-5px); opacity: 1; } }
+@keyframes popIn { from { opacity: 0; transform: translateY(10px) scale(.96); } to { opacity: 1; transform: none; } }
+.slots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.slot { border: 1px solid var(--gold-deep); padding: 7px 13px; border-radius: 999px; font-size: 13px; color: var(--gold); transition: background .3s, color .3s, border-color .3s; }
+.slot.sel { background: var(--gold); color: var(--ink); border-color: var(--gold); font-weight: 600; }
+.booked { align-self: stretch; display: flex; gap: 12px; align-items: center; border: 1px solid var(--gold); background: rgba(201,164,92,.1); padding: 12px 14px; animation: popIn .4s both; }
+.booked svg { width: 30px; height: 30px; flex: none; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.booked svg path { stroke-dasharray: 1; animation: draw .8s .1s both; }
+.booked b { display: block; font-size: 15px; }
+.booked span { display: block; font-size: 13px; color: var(--muted); }
+.chat-input { display: flex; align-items: center; justify-content: space-between; margin: 4px 16px 16px; padding: 10px 10px 10px 18px; border: 1px solid var(--line); border-radius: 999px; color: #6f675b; font-size: 14px; }
+.chat-input i { width: 26px; height: 26px; border-radius: 50%; background: var(--gold); }
+.auto-side { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.side-block { display: flex; flex-direction: column; gap: 14px; }
+.checklist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.checklist li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
+.checklist li::before { content: ""; width: 8px; height: 8px; margin-top: 9px; background: var(--gold); transform: rotate(45deg); }
+.notif { display: flex; flex-direction: column; gap: 12px; }
+.notif-card { border: 1px dashed var(--line); padding: 16px 18px; display: flex; flex-direction: column; gap: 2px; color: var(--muted); transition: border-color .4s, background .4s; }
+.notif-card b { font-size: 16px; font-weight: 600; }
+.notif-card.on { border: 1px solid var(--gold); background: rgba(201,164,92,.08); animation: slideIn .5s both; }
+.notif-card.on b { color: var(--gold); }
+.notif-card.on span { color: var(--paper); }
+@media (prefers-reduced-motion: reduce) { .msg, .booked, .booked svg path, .notif-card.on, .live, .typing i { animation: none; } .big { opacity: 1; transform: none; clip-path: none; transition: none; } }
+
+/* Custom cursor (mouse only) */
+.cur, .cur-dot { position: fixed; left: 0; top: 0; pointer-events: none; z-index: 100; opacity: 0; transition: opacity .3s; }
+.cur { width: 38px; height: 38px; border: 1px solid var(--gold); border-radius: 50%; transition: opacity .3s, background .25s, border-color .25s; }
+.cur.hot { background: rgba(201,164,92,.14); }
+.cur-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+.cur.on, .cur-dot.on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .hero h1 .w > i, .hero h1 .g { transform: none; animation: none; }
+  .btn.solid::after, .browser, .phone, .scroller, .offer.feature, .card, .snd.hint, .cta .btn { animation: none; }
+  .marquee .track { animation: none; flex-wrap: wrap; width: auto; }
+  .marquee { -webkit-mask-image: none; mask-image: none; }
+  html.js .rv, html.js .sp .w > i { opacity: 1; transform: none; transition: none; }
+  .glow { transition: none; }
+}
+</style>
+
+<canvas id="field" aria-hidden="true"></canvas>
+<div class="glow" id="glow" aria-hidden="true"></div>
+
+<header class="top" id="top">
+  <div class="top-in">
+    <a class="brand" href="#accueil" aria-label="Maison Apex, retour en haut">
+      <img src="img/logo-mark.png" alt="" width="38" height="32">
+      <b>Maison Apex</b>
+    </a>
+    <nav class="nav" aria-label="Navigation">
+      <a href="#services">Services</a>
+      <a href="#automatisation">Automatisation</a>
+      <a href="#exemples">Exemples</a>
+      <a href="#offres">Offres</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="tools">
+      <button class="snd hint" id="sound" type="button" aria-pressed="false" aria-label="Activer les effets sonores"><span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span id="sound-label">Son</span></button>
+      <a class="btn solid sm mag" href="#contact">Exemple gratuit</a>
+    </div>
+  </div>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+</header>
+
+<main>
+  <section class="hero container" id="accueil">
+    <div class="hero-copy">
+      <span class="label rv">Studio digital haut de gamme</span>
+      <h1 aria-label="Vos produits méritent une vitrine à leur hauteur.">
+        <span class="w" aria-hidden="true"><i style="--i:0">Vos</i></span><span class="w" aria-hidden="true"><i style="--i:1">produits</i></span><span class="w" aria-hidden="true"><i style="--i:2">méritent</i></span><span class="w" aria-hidden="true"><i style="--i:3">une</i></span><span class="w" aria-hidden="true"><i style="--i:4">vitrine</i></span><span class="w" aria-hidden="true"><i class="g" style="--i:5">à</i></span><span class="w" aria-hidden="true"><i class="g" style="--i:6">leur</i></span><span class="w" aria-hidden="true"><i class="g" style="--i:7">hauteur.</i></span>
+      </h1>
+      <p class="lead rv" style="--d:.5s">Annonces, vidéos, site web, et un assistant qui répond à vos clients et prend vos rendez-vous à votre place. Pour les professionnels qui vendent des biens de valeur : voitures, immobilier, mode, luxe.</p>
+      <div class="actions rv" style="--d:.65s">
+        <a class="btn solid mag" href="#contact">Recevoir un exemple gratuit</a>
+        <a class="btn ghost" href="#exemples">Voir des exemples</a>
+      </div>
+      <ul class="facts rv" style="--d:.8s">
+        <li>Exemple gratuit</li><li>Sans engagement</li><li>Réponses 24h/24</li>
+      </ul>
+    </div>
+
+    <div class="stage rv" id="stage" style="--d:.3s">
+      <div class="stage-in" id="stage-in">
+        <div class="browser">
+          <div class="bar"><i></i><i></i><i></i><span class="url">concession-exemple.fr</span></div>
+          <div class="screen"><div class="scroller m">
+            <div class="m-nav"><b>CONCESSION EXEMPLE</b><span>Stock</span><span>Services</span><span>Contact</span></div>
+            <div class="m-hero"><small>Sélection premium</small><h4>Des véhicules d'exception</h4><span class="m-btn">Voir le stock</span></div>
+            <div class="m-grid">
+              <div class="m-card"><div class="m-img g1"></div><b>Coupé sportif</b><span>2021 · 28 000 km</span></div>
+              <div class="m-card"><div class="m-img g2"></div><b>Berline premium</b><span>2020 · 54 000 km</span></div>
+              <div class="m-card"><div class="m-img g3"></div><b>SUV de luxe</b><span>2022 · 19 000 km</span></div>
+            </div>
+            <div class="m-strip">Garantie · Reprise · Financement</div>
+            <div class="m-grid">
+              <div class="m-card"><div class="m-img g2"></div><b>Cabriolet</b><span>2019 · 36 000 km</span></div>
+              <div class="m-card"><div class="m-img g3"></div><b>Grand tourisme</b><span>2021 · 22 000 km</span></div>
+              <div class="m-card"><div class="m-img g1"></div><b>Roadster</b><span>2018 · 41 000 km</span></div>
+            </div>
+            <div class="m-foot">Essai sur rendez-vous · Réponse rapide</div>
+          </div></div>
+        </div>
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="screen"><div class="scroller m">
+            <div class="m-hero"><small>Nouvel arrivage</small><h4>Voir le stock</h4><span class="m-btn">Appeler</span></div>
+            <div class="m-grid one">
+              <div class="m-card"><div class="m-img g1"></div><b>Coupé sportif</b><span>2021 · 28 000 km</span></div>
+              <div class="m-card"><div class="m-img g2"></div><b>Berline premium</b><span>2020 · 54 000 km</span></div>
+              <div class="m-card"><div class="m-img g3"></div><b>SUV de luxe</b><span>2022 · 19 000 km</span></div>
+            </div>
+            <div class="m-foot">Essai sur rendez-vous</div>
+          </div></div>
+        </div>
+      </div>
+      <span class="stage-tag">Exemple fictif. Le site que nous créons pour vous ressemble à ceci.</span>
+    </div>
+  </section>
+
+  <section class="band container" aria-label="Secteurs et services">
+    <div class="marquee"><div class="track" id="track-a"></div></div>
+    <div class="marquee rev"><div class="track" id="track-b"></div></div>
+  </section>
+
+  <section class="sec container" id="services">
+    <div class="head"><span class="label rv">Ce que nous faisons</span><h2 class="sp" data-split>Cinq services, un seul objectif : vendre plus vite.</h2></div>
+    <div class="bento">
+      <article class="svc tilt rv" style="--d:0s">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect pathLength="1" x="4" y="3" width="16" height="18" rx="1"/><path pathLength="1" d="M8 8h8M8 12h8M8 16h5"/></svg>
+        <h3>Annonces rédigées</h3><p>Titres clairs, points forts, prix et appel à l'action, adaptés à chaque plateforme (Leboncoin, La Centrale, portails immobiliers).</p>
+      </article>
+      <article class="svc tilt rv" style="--d:.08s">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect pathLength="1" x="3" y="3" width="8" height="8"/><rect pathLength="1" x="13" y="3" width="8" height="8"/><rect pathLength="1" x="3" y="13" width="8" height="8"/><rect pathLength="1" x="13" y="13" width="8" height="8"/></svg>
+        <h3>Posts Instagram et Facebook</h3><p>Visuels et légendes réguliers, dans le ton de votre marque.</p>
+      </article>
+      <article class="svc tilt rv" style="--d:.16s">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect pathLength="1" x="3" y="5" width="18" height="14" rx="1"/><path pathLength="1" d="M10 9l5 3-5 3z"/></svg>
+        <h3>Vidéos courtes</h3><p>Reels et TikTok montés à partir de vos propres images : présentation d'un véhicule, visite d'un bien, arrivage.</p>
+      </article>
+      <article class="svc tilt rv" style="--d:.08s">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect pathLength="1" x="3" y="4" width="18" height="16" rx="1"/><path pathLength="1" d="M3 9h18M7 6.5h.01M10 6.5h.01"/></svg>
+        <h3>Site vitrine</h3><p>Un site rapide, lisible sur mobile et sur ordinateur, avec votre stock, vos services et un bouton de contact direct.</p>
+      </article>
+      <article class="svc tilt rv" style="--d:.16s">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 5h16v11H10l-4 4v-4H4z"/><path pathLength="1" d="M8 9h8M8 12h5"/></svg>
+        <h3>Réponses automatiques</h3><p>Un assistant répond à vos clients 24h/24, les renseigne sur vos produits, propose des créneaux et enregistre le rendez-vous. Relance et rappel inclus.</p><a class="more" href="#automatisation">Voir la démonstration</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec container" id="automatisation">
+    <div class="head">
+      <span class="label rv">Automatisation</span>
+      <h2 class="sp" data-split>Un assistant qui répond, renseigne et prend vos rendez-vous.</h2>
+      <p class="rv" style="color:var(--muted);max-width:60ch">Vos clients écrivent à toute heure. L'assistant répond tout de suite, les renseigne sur vos produits, propose des créneaux et vous transmet le rendez-vous. Vous ne recevez que les clients prêts à venir.</p>
+    </div>
+    <div class="tabs rv" id="chat-tabs" role="tablist" aria-label="Scénario de conversation"></div>
+    <div class="auto-grid">
+      <div class="chat rv" id="chat-card">
+        <div class="chat-head">
+          <img src="img/logo-mark.png" alt="">
+          <div><b id="chat-name">Concession exemple</b><small><i class="live"></i>Assistant en ligne</small></div>
+          <button class="replay" id="replay" type="button">Rejouer</button>
+        </div>
+        <div class="chat-body" id="chat-body" aria-live="polite"></div>
+        <div class="chat-input" aria-hidden="true"><span>Écrire un message…</span><i></i></div>
+      </div>
+      <div class="auto-side">
+        <div class="side-block rv">
+          <span class="label">Ce que fait l'assistant</span>
+          <ul class="checklist">
+            <li>Répond en quelques secondes, jour et nuit</li>
+            <li>Renseigne sur vos véhicules, vos biens ou vos prestations</li>
+            <li>Pose les bonnes questions : besoin, délai, disponibilités</li>
+            <li>Propose des créneaux et enregistre le rendez-vous</li>
+            <li>Envoie un rappel la veille et relance les indécis</li>
+            <li>Vous transmet la fiche du contact</li>
+          </ul>
+        </div>
+        <div class="notif rv">
+          <span class="label">Ce que vous recevez</span>
+          <div class="notif-card" id="notif-card"><b id="notif-title">En attente d'une demande…</b><span id="notif-line"></span><span id="notif-sub"></span></div>
+        </div>
+        <button class="pick" type="button" data-offer="Pro">Demander cet assistant</button>
+        <p class="note">Simulation : la conversation illustre le fonctionnement. Votre assistant est configuré avec vos produits, vos horaires et votre agenda.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec container" id="exemples">
+    <div class="head"><span class="label rv">Exemples</span><h2 class="sp" data-split>Choisissez votre métier, voyez le résultat.</h2></div>
+    <div class="tabs rv" role="tablist" aria-label="Secteur" id="tabs"></div>
+    <div class="ex" id="ex">
+      <figure class="reel" id="reel-fig">
+        <div class="reel-frame">
+          <video id="reel" muted loop playsinline preload="metadata" aria-label="Exemple de vidéo courte"></video>
+          <span class="reel-badge">Reel · 12 s</span>
+          <button class="reel-btn" id="reel-btn" type="button" aria-label="Mettre en pause">Pause</button>
+        </div>
+        <figcaption id="reel-cap"></figcaption>
+      </figure>
+      <div class="demo" id="demo" role="tabpanel" aria-live="polite"></div>
+    </div>
+    <p class="note">Exemples fictifs : vidéos en motion design et textes écrits pour illustrer le format. Vos vidéos utilisent vos propres images, et vos contenus reprennent uniquement les informations réelles de vos produits.</p>
+  </section>
+
+  <section class="sec container" id="offres">
+    <div class="head"><span class="label rv">Offres</span><h2 class="sp" data-split>Un site pour démarrer, un abonnement pour durer.</h2></div>
+    <div class="offers">
+      <article class="offer feature tilt rv" style="--d:0s">
+        <span class="flag">Pour démarrer</span>
+        <h3>Site vitrine</h3>
+        <div class="price"><span class="count" data-to="900">900</span> à <span class="count" data-to="1500">1 500</span> € <small>paiement unique</small></div>
+        <p>4 à 6 pages, optimisé mobile et ordinateur, formulaire de contact, profils réseaux mis en place. Livré en 7 à 10 jours.</p>
+        <button class="pick" type="button" data-offer="Site vitrine">Choisir cette offre</button>
+      </article>
+      <article class="offer tilt rv" style="--d:.08s">
+        <h3>Essentiel</h3>
+        <div class="price"><span class="count" data-to="290">290</span> € <small>par mois</small></div>
+        <p>8 posts avec visuels et légendes, 8 annonces rédigées et 3 vidéos courtes.</p>
+        <button class="pick" type="button" data-offer="Essentiel">Choisir cette offre</button>
+      </article>
+      <article class="offer tilt rv" style="--d:.16s">
+        <h3>Pro</h3>
+        <div class="price"><span class="count" data-to="490">490</span> € <small>par mois</small></div>
+        <p>L'Essentiel avec 6 vidéos courtes au lieu de 3, plus les mises à jour du site et l'assistant de réponses automatiques.</p>
+        <button class="pick" type="button" data-offer="Pro">Choisir cette offre</button>
+      </article>
+      <article class="offer tilt rv" style="--d:.24s">
+        <h3>Premium</h3>
+        <div class="price"><span class="count" data-to="790">790</span> € <small>par mois</small></div>
+        <p>Le Pro, plus automatisation complète : tri des demandes, devis, prise de rendez-vous, relances et rapport mensuel.</p>
+        <button class="pick" type="button" data-offer="Premium">Choisir cette offre</button>
+      </article>
+    </div>
+    <p class="note">Tarifs de départ, ajustés après échange selon votre activité.</p>
+  </section>
+
+  <section class="sec container" id="methode">
+    <div class="head"><span class="label rv">Comment ça se passe</span><h2 class="sp" data-split>Trois étapes, sans engagement.</h2></div>
+    <div class="steps">
+      <div class="step rv" style="--d:0s"><span class="n">1</span><h3>Vous remplissez la demande</h3><p>Deux minutes : votre activité, ce que vous vendez, ce qui vous intéresse.</p></div>
+      <div class="step rv" style="--d:.1s"><span class="n">2</span><h3>Nous préparons un exemple gratuit</h3><p>Une annonce ou un visuel sur l'un de vos produits, sans engagement.</p></div>
+      <div class="step rv" style="--d:.2s"><span class="n">3</span><h3>Nous lançons ensemble</h3><p>Si l'exemple vous plaît, nous choisissons la formule et démarrons.</p></div>
+    </div>
+  </section>
+
+  <section class="sec container" id="contact">
+    <div class="contact-grid">
+      <div class="pitch">
+        <div class="head"><span class="label rv">Votre demande</span><h2 class="sp" data-split>Recevez votre exemple gratuit.</h2></div>
+        <ul class="rv">
+          <li>Un exemple concret réalisé sur l'un de vos produits</li>
+          <li>Une proposition de formule claire, avec le prix</li>
+          <li>Si vous le souhaitez, un aperçu de votre assistant de réponses automatiques</li>
+          <li>Aucun engagement, vous décidez ensuite</li>
+        </ul>
+        <div class="direct rv">
+          <span class="label">Contact direct</span>
+          <a id="ig-direct" href="#" target="_blank" rel="noopener">@maisonapex sur Instagram</a>
+          <a id="tel-direct" href="tel:+33744576542">07 44 57 65 42</a>
+          <a id="mail-direct" href="mailto:contact@maison-apex.eu">contact@maison-apex.eu</a>
+        </div>
+      </div>
+
+      <div class="form-card rv" style="--d:.1s">
+        <form id="lead" novalidate>
+          <div class="row2">
+            <div class="field">
+              <label for="f-name">Prénom et nom</label>
+              <input id="f-name" type="text" autocomplete="name" placeholder="Prénom Nom">
+              <span class="err" id="e-name"></span>
+            </div>
+            <div class="field">
+              <label for="f-biz">Votre activité</label>
+              <select id="f-biz">
+                <option value="">Choisir…</option>
+                <option>Marchand automobile</option>
+                <option>Détailing, covering, préparation</option>
+                <option>Location de voitures de luxe</option>
+                <option>Immobilier</option>
+                <option>Mode et revente de luxe</option>
+                <option>Bijouterie</option>
+                <option>Beauté et coiffure</option>
+                <option>Restauration</option>
+                <option>Événementiel</option>
+                <option>Autre</option>
+              </select>
+              <span class="err" id="e-biz"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-sell">Ce que vous vendez</label>
+            <input id="f-sell" type="text" placeholder="Ex. voitures de sport d'occasion, appartements, sacs de luxe">
+          </div>
+          <fieldset>
+            <legend>Ce qui vous intéresse</legend>
+            <div class="checks" id="f-services">
+              <label><input type="checkbox" value="Annonces"><span>Annonces</span></label>
+              <label><input type="checkbox" value="Posts réseaux"><span>Posts réseaux</span></label>
+              <label><input type="checkbox" value="Vidéos courtes"><span>Vidéos courtes</span></label>
+              <label><input type="checkbox" value="Site web"><span>Site web</span></label>
+              <label><input type="checkbox" value="Réponses automatiques"><span>Réponses automatiques</span></label>
+            </div>
+          </fieldset>
+          <div class="row2">
+            <div class="field">
+              <label for="f-offer">Formule envisagée</label>
+              <select id="f-offer">
+                <option>Je ne sais pas encore</option>
+                <option>Site vitrine</option>
+                <option>Essentiel</option>
+                <option>Pro</option>
+                <option>Premium</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="f-contact">Comment vous joindre</label>
+              <input id="f-contact" type="text" autocomplete="off" placeholder="@votre_compte, e-mail ou téléphone">
+              <span class="err" id="e-contact"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-msg">Un mot en plus (facultatif)</label>
+            <textarea id="f-msg" placeholder="Votre situation, vos objectifs, vos délais"></textarea>
+          </div>
+          <input type="text" id="f-trap" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+          <button class="btn solid mag" type="submit" id="submit-btn">Préparer ma demande</button>
+        </form>
+
+        <div class="result" id="sent" hidden>
+          <h3>Demande envoyée</h3>
+          <p>Merci, votre demande est bien arrivée chez Maison Apex. Nous vous recontactons très vite avec votre exemple gratuit.</p>
+        </div>
+
+        <div class="result" id="result" hidden>
+          <h3>Votre demande est prête</h3>
+          <p class="err" id="send-error" hidden>L'envoi automatique n'a pas fonctionné. Envoyez-nous le message ci-dessous par Instagram ou par e-mail.</p>
+          <ol>
+            <li>Copiez le message ci-dessous.</li>
+            <li>Envoyez-le à Maison Apex en message privé Instagram, ou par e-mail.</li>
+          </ol>
+          <textarea id="out" readonly aria-label="Message à envoyer"></textarea>
+          <div class="row">
+            <button class="btn solid" type="button" id="copy-out">Copier le message</button>
+            <a class="btn ghost" id="ig-link" href="#" target="_blank" rel="noopener">Ouvrir Instagram</a>
+            <a class="btn ghost" id="mail-link" href="#">Envoyer par e-mail</a>
+          </div>
+          <p class="note" id="mail-note">La demande n'est envoyée que lorsque vous collez le message dans Instagram ou que vous l'envoyez par e-mail. Si le bouton e-mail ne s'ouvre pas, copiez le message et écrivez à <span id="mail-show"></span>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot container rv">
+    <img class="big" id="big" src="img/logo-full.png" alt="Maison Apex, studio digital haut de gamme">
+    <button class="btn ghost sm" type="button" id="to-top">Retour en haut</button>
+    <small>Maison Apex · Studio digital haut de gamme</small>
+  </footer>
+</main>
+
+<div class="cta" id="cta"><a class="btn solid" href="#contact">Recevoir un exemple gratuit</a></div>
+
+<script>
+/* Coordonnées : à remplacer par les vraies. */
+var IG_HANDLE = 'maisonapex';
+var EMAIL = 'contact@maison-apex.eu';
+/* Réception directe des demandes : coller ici l'adresse du formulaire (ex. https://formspree.io/f/xxxxxxxx).
+   Vide = le visiteur copie son message et l'envoie lui-même. Ne fonctionne que si la page est hébergée sur un site (pas dans l'aperçu Claude). */
+var FORM_ENDPOINT = 'https://formspree.io/f/xppprblr';
+
+var EXAMPLES = [
+  { id: 'auto', name: 'Automobile',
+    ad: { title: 'Berline premium · 2020 · 54 000 km · Entretien suivi', items: ['Première main, carnet et factures disponibles', 'Deux clés, garantie incluse', 'Essai sur rendez-vous, reprise possible'] },
+    post: { text: 'Certaines voitures se reconnaissent au premier regard. Nouvel arrivage, visible sur rendez-vous. Écrivez-nous pour l\'essayer.', tags: '#automobile #occasionpremium #arrivage' },
+    video: ['Plan large : la voiture arrive', 'Gros plan : calandre puis intérieur', 'Plan final : prix, ville, essai sur rendez-vous'] },
+  { id: 'immo', name: 'Immobilier',
+    ad: { title: 'Appartement 3 pièces · 68 m² · Balcon · Proche transports', items: ['Séjour lumineux, cuisine ouverte', 'Étage élevé, copropriété bien tenue', 'Mentions légales à compléter, dont le DPE'] },
+    post: { text: 'Nouveau à la vente : un trois pièces lumineux avec balcon. Visites sur rendez-vous cette semaine.', tags: '#immobilier #nouveaubien #visite' },
+    video: ['Entrée et séjour en un plan fluide', 'Cuisine, chambres, balcon', 'Plan final : surface, quartier, contact'] },
+  { id: 'mode', name: 'Mode et luxe',
+    ad: { title: 'Sac en cuir grainé · Très bon état · Avec boîte et dustbag', items: ['Dimensions et état détaillés', 'Photos de tous les angles et des coutures', 'Preuve d\'achat ou certificat si disponible'] },
+    post: { text: 'Pièce sélectionnée, en très bon état, prête à repartir. Détails et photos en message privé.', tags: '#luxe #secondemain #pieceunique' },
+    video: ['Gros plan sur le cuir et la fermeture', 'Intérieur et accessoires inclus', 'Plan final : prix et livraison'] },
+  { id: 'beaute', name: 'Beauté',
+    ad: { title: 'Balayage sur mesure · Salon indépendant · Sur rendez-vous', items: ['Diagnostic de couleur offert', 'Produits professionnels, soin inclus', 'Durée et tarif annoncés à l\'avance'] },
+    post: { text: 'Avant, après, et le temps qu\'il faut pour que ce soit parfait. Réservez votre créneau en message privé.', tags: '#coiffure #balayage #beaute' },
+    video: ['Avant : plan fixe sur le résultat de départ', 'Étapes en accéléré', 'Après : résultat final et prise de rendez-vous'] }
+];
+var SECTORS = ['Marchands automobiles', 'Détailing et covering', 'Location de voitures de luxe', 'Immobilier', 'Mode et revente de luxe', 'Bijouterie', 'Beauté et coiffure', 'Restauration', 'Événementiel'];
+var SERVICES = ['Annonces', 'Posts', 'Vidéos courtes', 'Site vitrine', 'Réponses automatiques', 'Automatisations'];
+
+function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text) n.textContent = text; return n; }
+function $(id) { return document.getElementById(id); }
+function safe(fn) { try { fn(); } catch (e) { if (window.console) console.warn(e); } }
+var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var FINE = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+var root = document.documentElement;
+
+/* ---------- Sound (synthesised, off until the visitor turns it on) ---------- */
+var audio = { ctx: null, master: null, on: false, last: {} };
+function ensureCtx() {
+  if (!audio.ctx) {
+    var AC = window.AudioContext || window.webkitAudioContext; if (!AC) return null;
+    audio.ctx = new AC(); audio.master = audio.ctx.createGain(); audio.master.gain.value = 0.9; audio.master.connect(audio.ctx.destination);
+  }
+  if (audio.ctx.state === 'suspended') audio.ctx.resume();
+  return audio.ctx;
+}
+function tone(f, d, type, v, delay, to) {
+  var c = audio.ctx, t = c.currentTime + (delay || 0), o = c.createOscillator(), g = c.createGain();
+  o.type = type || 'sine'; o.frequency.setValueAtTime(f, t);
+  if (to) o.frequency.exponentialRampToValueAtTime(to, t + d);
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(v, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+  o.connect(g); g.connect(audio.master); o.start(t); o.stop(t + d + 0.03);
+}
+function whoosh(vol) {
+  var c = audio.ctx, t = c.currentTime, len = Math.floor(c.sampleRate * 0.5), buf = c.createBuffer(1, len, c.sampleRate), d = buf.getChannelData(0);
+  for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+  var s = c.createBufferSource(); s.buffer = buf;
+  var f = c.createBiquadFilter(); f.type = 'bandpass'; f.Q.value = 0.8; f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(2600, t + 0.4);
+  var g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.12); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+  s.connect(f); f.connect(g); g.connect(audio.master); s.start(t);
+}
+var SFX = {
+  hover: function () { tone(1900, 0.05, 'sine', 0.022); },
+  click: function () { tone(240, 0.1, 'triangle', 0.09, 0, 120); tone(900, 0.05, 'sine', 0.04); },
+  tab: function () { tone(660, 0.09, 'sine', 0.06); tone(990, 0.14, 'sine', 0.05, 0.07); },
+  tick: function () { tone(1400, 0.04, 'triangle', 0.05); },
+  type: function () { tone(2300 + Math.random() * 500, 0.014, 'square', 0.01); },
+  swoosh: function () { whoosh(0.035); },
+  err: function () { tone(180, 0.22, 'sawtooth', 0.05, 0, 110); },
+  pop: function () { tone(520, 0.09, 'sine', 0.05, 0, 760); },
+  send: function () { tone(820, 0.07, 'triangle', 0.05, 0, 1040); },
+  chime: function () { [523.25, 659.25, 783.99, 1046.5].forEach(function (f, i) { tone(f, 1.0, 'sine', 0.07, i * 0.09); tone(f * 2, 0.5, 'sine', 0.018, i * 0.09); }); }
+};
+function play(name, minGap) {
+  if (!audio.on) return;
+  var now = Date.now(); if (now - (audio.last[name] || 0) < (minGap || 0)) return; audio.last[name] = now;
+  safe(function () { if (ensureCtx()) SFX[name](); });
+}
+var soundBtn = $('sound');
+soundBtn.addEventListener('click', function () {
+  audio.on = !audio.on;
+  soundBtn.classList.remove('hint');
+  soundBtn.setAttribute('aria-pressed', audio.on ? 'true' : 'false');
+  soundBtn.setAttribute('aria-label', audio.on ? 'Couper les effets sonores' : 'Activer les effets sonores');
+  $('sound-label').textContent = audio.on ? 'Son activé' : 'Son';
+  if (audio.on) { ensureCtx(); play('chime'); }
+});
+if (FINE) {
+  var lastHover = null;
+  document.addEventListener('pointerover', function (e) {
+    if (e.pointerType !== 'mouse') return;
+    var t = e.target.closest && e.target.closest('.btn, .tab, .pick, .nav a, .snd, .pill, .tilt');
+    if (t && t !== lastHover) { play('hover', 70); }
+    lastHover = t;
+  });
+}
+document.addEventListener('click', function (e) {
+  var t = e.target.closest && e.target.closest('.btn, .pick, .nav a, .brand, .tab, .checks label');
+  if (!t || t === soundBtn) return;
+  if (t.classList.contains('tab')) play('tab'); else if (t.closest('.checks')) play('tick'); else play('click');
+});
+
+/* ---------- Heading word split ---------- */
+safe(function () {
+  Array.prototype.forEach.call(document.querySelectorAll('[data-split]'), function (h) {
+    var words = h.textContent.trim().split(/\s+/); h.setAttribute('aria-label', h.textContent.trim()); h.textContent = '';
+    words.forEach(function (w, i) {
+      var s = el('span', 'w'); s.setAttribute('aria-hidden', 'true'); var n = el('i', '', w); n.style.setProperty('--i', i); s.appendChild(n); h.appendChild(s);
+    });
+  });
+});
+
+/* ---------- Reveal on scroll, count-up, nav highlight ---------- */
+function countUp(n) {
+  var to = parseInt(n.dataset.to, 10), t0 = performance.now(), dur = 1300;
+  (function step(now) {
+    var p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    n.textContent = Math.round(to * e).toLocaleString('fr-FR');
+    if (p < 1) requestAnimationFrame(step);
+  })(t0);
+}
+safe(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var n = en.target; n.classList.add('in'); io.unobserve(n);
+      if (n.classList.contains('rv')) setTimeout(function () { n.classList.add('done'); }, 1300);
+      if (n.classList.contains('sp')) play('swoosh', 900);
+      if (!RM) Array.prototype.forEach.call(n.querySelectorAll('.count'), countUp);
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+  Array.prototype.forEach.call(document.querySelectorAll('.rv, .sp, .big'), function (n) { io.observe(n); });
+  root.classList.add('js');
+
+  var links = {}; Array.prototype.forEach.call(document.querySelectorAll('.nav a'), function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) { var a = links[en.target.id]; if (a && en.isIntersecting) { Object.keys(links).forEach(function (k) { links[k].classList.remove('active'); }); a.classList.add('active'); } });
+  }, { threshold: 0.35 });
+  Object.keys(links).forEach(function (k) { var s = $(k); if (s) spy.observe(s); });
+});
+
+/* ---------- Examples with typing ---------- */
+var tabsEl = $('tabs'), demoEl = $('demo'), typeId = 0;
+var reelEl = $('reel'), reelIn = false, reelPaused = false;
+function setReel(id) {
+  if (!reelEl) return;
+  var ex = EXAMPLES.filter(function (e) { return e.id === id; })[0];
+  $('reel-cap').textContent = 'Exemple fictif · ' + ex.name + ' · vidéo courte pour Instagram et TikTok';
+  reelEl.classList.add('swap');
+  setTimeout(function () {
+    reelEl.poster = 'posters/' + id + '.jpg'; reelEl.src = 'videos/' + id + '.mp4'; reelEl.load();
+    reelEl.classList.remove('swap');
+    if (reelIn && !RM && !reelPaused) reelEl.play().catch(function () {});
+  }, 160);
+}
+function typeInto(node, text, animate) {
+  var id = ++typeId; node.textContent = '';
+  var a = el('span'), b = el('span', 'rest', text); node.appendChild(a); node.appendChild(b);
+  if (!animate || RM) { a.textContent = text; b.textContent = ''; return; }
+  var i = 0; a.className = 'caret';
+  (function step() {
+    if (id !== typeId) return;
+    i++; a.textContent = text.slice(0, i); b.textContent = text.slice(i);
+    if (i % 2 === 0) play('type', 30);
+    if (i < text.length) setTimeout(step, 22); else a.classList.remove('caret');
+  })();
+}
+function showExample(id, animate) {
+  var ex = EXAMPLES.filter(function (e) { return e.id === id; })[0];
+  Array.prototype.forEach.call(tabsEl.children, function (b) { b.setAttribute('aria-selected', b.dataset.id === id ? 'true' : 'false'); });
+  demoEl.textContent = '';
+  var c1 = el('article', 'card'); c1.appendChild(el('span', 'tag', 'Annonce')); c1.appendChild(el('h3', '', ex.ad.title));
+  var ul = el('ul'); ex.ad.items.forEach(function (t) { ul.appendChild(el('li', '', t)); }); c1.appendChild(ul);
+  var c2 = el('article', 'card'); c2.appendChild(el('span', 'tag', 'Post Instagram')); var pp = el('p'); c2.appendChild(pp); c2.appendChild(el('p', 'hash', ex.post.tags));
+  var c3 = el('article', 'card'); c3.appendChild(el('span', 'tag', 'Script de la vidéo, plan par plan'));
+  var ol = el('ol'); ex.video.forEach(function (t) { ol.appendChild(el('li', '', t)); }); c3.appendChild(ol);
+  demoEl.appendChild(c1); demoEl.appendChild(c2); demoEl.appendChild(c3);
+  typeInto(pp, ex.post.text, animate);
+  setReel(id);
+}
+EXAMPLES.forEach(function (ex) {
+  var b = el('button', 'tab', ex.name); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.id = ex.id;
+  b.addEventListener('click', function () { showExample(ex.id, true); });
+  tabsEl.appendChild(b);
+});
+showExample(EXAMPLES[0].id, false);
+
+/* ---------- Example reel: plays when visible, pause button ---------- */
+if (reelEl) {
+  reelEl.muted = true; reelEl.loop = true; reelEl.playsInline = true;
+  if (RM) reelEl.controls = true;
+  reelEl.addEventListener('error', function () { $('reel-fig').hidden = true; $('ex').classList.add('solo'); });
+  var rb = $('reel-btn');
+  if (RM) rb.hidden = true;
+  rb.addEventListener('click', function () {
+    if (reelEl.paused) { reelPaused = false; reelEl.play().catch(function () {}); rb.textContent = 'Pause'; rb.setAttribute('aria-label', 'Mettre en pause'); }
+    else { reelPaused = true; reelEl.pause(); rb.textContent = 'Lire'; rb.setAttribute('aria-label', 'Lire la vidéo'); }
+  });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) {
+      reelIn = en[0].isIntersecting;
+      if (reelIn && !RM && !reelPaused) reelEl.play().catch(function () {}); else if (!reelIn) reelEl.pause();
+    }, { threshold: 0.4 }).observe($('reel-fig'));
+  }
+}
+
+/* ---------- Marquees ---------- */
+function fillTrack(id, list) {
+  var track = $(id);
+  [0, 1].forEach(function (copy) { list.forEach(function (s) { var p = el('span', 'pill', s); if (copy) p.setAttribute('aria-hidden', 'true'); track.appendChild(p); }); });
+}
+fillTrack('track-a', SECTORS); fillTrack('track-b', SERVICES.concat(SERVICES));
+
+/* ---------- Automation demo: a client chats with the assistant and books ---------- */
+var CHATS = [
+  { id: 'auto', name: 'Automobile', who: 'Concession exemple', notif: { line: 'Jeudi · 14h', sub: 'Essai du coupé sportif · coordonnées transmises' }, steps: [
+    { w: 'c', t: 'Bonjour, le coupé sportif de 2021 est-il toujours disponible ?' },
+    { w: 'a', t: 'Bonjour ! Oui, il est toujours disponible : 28 000 km, première main, entretien complet. Souhaitez-vous plus d\'informations ou l\'essayer ?' },
+    { w: 'c', t: 'Vous reprenez mon ancien véhicule ? Et un financement est possible ?' },
+    { w: 'a', t: 'La reprise est possible après une estimation rapide, et un financement peut être étudié. Voulez-vous passer l\'essayer ?' },
+    { w: 'c', t: 'Oui, plutôt cette semaine.' },
+    { w: 'a', t: 'Parfait, voici les créneaux disponibles :', slots: ['Mer. 10h', 'Jeu. 14h', 'Ven. 17h'], pick: 1 },
+    { w: 'c', t: 'Jeudi 14h, parfait.' },
+    { w: 'a', t: 'C\'est noté. Vous recevrez un rappel la veille. À jeudi !', confirm: { title: 'Rendez-vous confirmé', line: 'Jeudi · 14h', sub: 'Essai du coupé sportif' } }
+  ] },
+  { id: 'immo', name: 'Immobilier', who: 'Agence exemple', notif: { line: 'Samedi · 10h', sub: 'Visite de l\'appartement 3 pièces · coordonnées transmises' }, steps: [
+    { w: 'c', t: 'Bonjour, l\'appartement 3 pièces est-il toujours à vendre ?' },
+    { w: 'a', t: 'Bonjour ! Oui, il est disponible : 68 m², balcon, étage élevé. Souhaitez-vous le visiter ?' },
+    { w: 'c', t: 'Pouvez-vous m\'envoyer le dossier avec les charges et les diagnostics ?' },
+    { w: 'a', t: 'Bien sûr, je vous envoie le dossier complet. Souhaitez-vous aussi fixer une visite ?' },
+    { w: 'c', t: 'Oui, samedi si possible.' },
+    { w: 'a', t: 'Voici les créneaux disponibles :', slots: ['Sam. 10h', 'Sam. 11h', 'Lun. 18h'], pick: 0 },
+    { w: 'c', t: 'Samedi 10h, c\'est bon pour moi.' },
+    { w: 'a', t: 'Visite confirmée, un rappel vous sera envoyé la veille.', confirm: { title: 'Visite confirmée', line: 'Samedi · 10h', sub: 'Appartement 3 pièces' } }
+  ] },
+  { id: 'beaute', name: 'Beauté', who: 'Salon exemple', notif: { line: 'Vendredi · 14h', sub: 'Balayage sur mesure · coordonnées transmises' }, steps: [
+    { w: 'c', t: 'Bonjour, vous faites des balayages ? Combien de temps ça prend ?' },
+    { w: 'a', t: 'Bonjour ! Oui, balayage sur mesure avec diagnostic de couleur offert. Comptez environ 3 heures, et le tarif vous est annoncé avant de commencer.' },
+    { w: 'c', t: 'Parfait, je voudrais réserver.' },
+    { w: 'a', t: 'Avec plaisir ! Voici les créneaux disponibles :', slots: ['Jeu. 10h', 'Ven. 14h', 'Sam. 9h'], pick: 1 },
+    { w: 'c', t: 'Vendredi 14h, s\'il vous plaît.' },
+    { w: 'a', t: 'C\'est réservé. Un rappel vous sera envoyé la veille.', confirm: { title: 'Rendez-vous confirmé', line: 'Vendredi · 14h', sub: 'Balayage sur mesure' } }
+  ] }
+];
+var chatBody = $('chat-body'), chatTok = 0, chatCur = CHATS[0].id, chatTabs = $('chat-tabs');
+function sleep(ms, tok) { return new Promise(function (res, rej) { setTimeout(function () { if (tok === chatTok) res(); else rej(new Error('cancel')); }, ms); }); }
+function scrollChat() { chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: RM ? 'auto' : 'smooth' }); }
+function setNotif(c) {
+  var card = $('notif-card');
+  if (!c) { card.classList.remove('on'); $('notif-title').textContent = 'En attente d\'une demande…'; $('notif-line').textContent = ''; $('notif-sub').textContent = ''; return; }
+  card.classList.remove('on'); void card.offsetWidth; card.classList.add('on');
+  $('notif-title').textContent = 'Nouveau rendez-vous'; $('notif-line').textContent = c.notif.line; $('notif-sub').textContent = c.notif.sub;
+}
+function bookedEl(cf) {
+  var b = el('div', 'booked');
+  b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path pathLength="1" d="M7.5 12.5l3 3 6-7"/></svg>';
+  var d = el('div'); d.appendChild(el('b', '', cf.title)); d.appendChild(el('span', '', cf.line)); d.appendChild(el('span', '', cf.sub)); b.appendChild(d);
+  return b;
+}
+async function playChat(id, instant) {
+  var tok = ++chatTok, c = CHATS.filter(function (x) { return x.id === id; })[0];
+  chatCur = id; chatBody.textContent = ''; $('chat-name').textContent = c.who; setNotif(null);
+  Array.prototype.forEach.call(chatTabs.children, function (b) { b.setAttribute('aria-selected', b.dataset.id === id ? 'true' : 'false'); });
+  try {
+    for (var i = 0; i < c.steps.length; i++) {
+      var st = c.steps[i];
+      if (st.w === 'a' && !instant) {
+        var ty = el('div', 'msg a typing'); ty.innerHTML = '<i></i><i></i><i></i>'; chatBody.appendChild(ty); scrollChat();
+        await sleep(950, tok); ty.remove();
+      }
+      var m = el('div', 'msg ' + st.w, st.t); chatBody.appendChild(m); scrollChat(); play(st.w === 'a' ? 'pop' : 'send');
+      if (st.slots) {
+        var sw = el('div', 'slots'); st.slots.forEach(function (x) { sw.appendChild(el('span', 'slot', x)); }); m.appendChild(sw); scrollChat();
+        if (!instant) await sleep(1400, tok);
+        sw.children[st.pick].classList.add('sel'); play('tick');
+        if (!instant) await sleep(800, tok);
+      }
+      if (st.confirm) {
+        chatBody.appendChild(bookedEl(st.confirm)); scrollChat(); play('chime');
+        if (!instant) await sleep(600, tok);
+        setNotif(c);
+      }
+      if (!instant) await sleep(st.w === 'c' ? 850 : 1200, tok);
+    }
+  } catch (e) { /* replaced by a newer run */ }
+}
+CHATS.forEach(function (c) {
+  var b = el('button', 'tab', c.name); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.id = c.id;
+  b.addEventListener('click', function () { playChat(c.id, RM); });
+  chatTabs.appendChild(b);
+});
+$('replay').addEventListener('click', function () { playChat(chatCur, RM); });
+Array.prototype.forEach.call(chatTabs.children, function (b, i) { b.setAttribute('aria-selected', i === 0 ? 'true' : 'false'); });
+if (RM || !('IntersectionObserver' in window)) { playChat(chatCur, true); }
+else {
+  var chatIo = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { chatIo.disconnect(); playChat(chatCur, false); } }, { threshold: 0.45 });
+  chatIo.observe($('chat-card'));
+}
+
+/* ---------- Offers prefill the form ---------- */
+Array.prototype.forEach.call(document.querySelectorAll('.pick'), function (b) {
+  b.addEventListener('click', function () { $('f-offer').value = b.dataset.offer; $('contact').scrollIntoView({ behavior: RM ? 'auto' : 'smooth' }); });
+});
+
+/* ---------- Form ---------- */
+var form = $('lead'), result = $('result'), out = $('out');
+$('ig-link').href = 'https://www.instagram.com/' + IG_HANDLE + '/';
+$('ig-direct').href = 'https://www.instagram.com/' + IG_HANDLE + '/'; $('ig-direct').textContent = '@' + IG_HANDLE + ' sur Instagram';
+if (EMAIL) { $('mail-direct').href = 'mailto:' + EMAIL; $('mail-direct').textContent = EMAIL; $('mail-show').textContent = EMAIL; }
+else { $('mail-direct').hidden = true; $('mail-link').hidden = true; $('mail-note').textContent = 'La demande n\'est envoyée que lorsque vous collez le message dans Instagram.'; }
+function val(id) { return $(id).value.trim(); }
+function setErr(id, msg) { $(id).textContent = msg; }
+function burst(node) {
+  if (RM) return;
+  var r = node.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  for (var i = 0; i < 26; i++) {
+    var s = el('span', 'sparkle'); s.style.left = cx + 'px'; s.style.top = cy + 'px'; document.body.appendChild(s);
+    var a = Math.random() * Math.PI * 2, d = 70 + Math.random() * 120;
+    var an = s.animate([{ transform: 'translate(0,0) rotate(45deg) scale(1)', opacity: 1 }, { transform: 'translate(' + Math.cos(a) * d + 'px,' + (Math.sin(a) * d - 30) + 'px) rotate(225deg) scale(0)', opacity: 0 }], { duration: 700 + Math.random() * 500, easing: 'cubic-bezier(.2,.7,.2,1)' });
+    an.onfinish = (function (n) { return function () { n.remove(); }; })(s);
+  }
+}
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
+  setErr('e-name', ''); setErr('e-biz', ''); setErr('e-contact', '');
+  var ok = true;
+  if (!val('f-name')) { setErr('e-name', 'Indiquez votre nom.'); ok = false; }
+  if (!val('f-biz')) { setErr('e-biz', 'Choisissez votre activité.'); ok = false; }
+  if (!val('f-contact')) { setErr('e-contact', 'Indiquez comment vous joindre.'); ok = false; }
+  if (!ok) { play('err'); return; }
+  var services = Array.prototype.filter.call(document.querySelectorAll('#f-services input'), function (i) { return i.checked; }).map(function (i) { return i.value; });
+  var lines = ['Bonjour Maison Apex,', '', 'Je m\'appelle ' + val('f-name') + ' (' + val('f-biz') + ').'];
+  if (val('f-sell')) lines.push('Je vends : ' + val('f-sell') + '.');
+  if (services.length) lines.push('Ce qui m\'intéresse : ' + services.join(', ') + '.');
+  lines.push('Formule envisagée : ' + val('f-offer') + '.');
+  if (val('f-msg')) lines.push('', val('f-msg'));
+  lines.push('', 'Pour me joindre : ' + val('f-contact') + '.', 'Je souhaite recevoir un exemple gratuit.');
+  var text = lines.join('\n');
+  var btn = $('submit-btn');
+  function showFallback() {
+    out.value = text;
+    $('mail-link').href = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Demande d\'exemple gratuit') + '&body=' + encodeURIComponent(text);
+    result.hidden = false; play('chime'); burst(btn);
+    result.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
+  }
+  if ($('f-trap').value) return;
+  if (!FORM_ENDPOINT) { showFallback(); return; }
+  btn.disabled = true; btn.textContent = 'Envoi en cours…';
+  fetch(FORM_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject: 'Nouvelle demande Maison Apex : ' + val('f-name'),
+      nom: val('f-name'), activite: val('f-biz'), vend: val('f-sell'), services: services.join(', '),
+      formule: val('f-offer'), contact: val('f-contact'), message: val('f-msg'), recapitulatif: text
+    })
+  }).then(function (r) {
+    if (!r.ok) throw new Error('http ' + r.status);
+    burst(btn); play('chime');
+    form.hidden = true; $('sent').hidden = false;
+    $('sent').scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
+  }).catch(function () {
+    btn.disabled = false; btn.textContent = 'Envoyer ma demande';
+    $('send-error').hidden = false; showFallback();
+  });
+});
+if (FORM_ENDPOINT) $('submit-btn').textContent = 'Envoyer ma demande';
+var copyBtn = $('copy-out');
+copyBtn.addEventListener('click', function () {
+  function done() { copyBtn.textContent = 'Copié'; setTimeout(function () { copyBtn.textContent = 'Copier le message'; }, 1800); }
+  function fallback() { out.focus(); out.select(); }
+  try { navigator.clipboard.writeText(out.value).then(done, fallback); } catch (err) { fallback(); }
+});
+
+/* ---------- Sticky CTA, to-top ---------- */
+var cta = $('cta');
+if ('IntersectionObserver' in window) {
+  new IntersectionObserver(function (entries) { cta.classList.toggle('off', entries[0].isIntersecting); }, { threshold: 0.12 }).observe($('contact'));
+}
+$('to-top').addEventListener('click', function () { window.scrollTo({ top: 0, behavior: RM ? 'auto' : 'smooth' }); });
+
+/* ---------- Scroll: progress, header, glow ---------- */
+var glow = $('glow'), bar = $('progress'), head = $('top'), ticking = false;
+function onScroll() {
+  if (ticking) return; ticking = true;
+  requestAnimationFrame(function () {
+    var max = root.scrollHeight - window.innerHeight, p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    bar.style.setProperty('--p', p.toFixed(4));
+    head.classList.toggle('scrolled', window.scrollY > 10);
+    if (!glow.dataset.pointer) {
+      glow.style.setProperty('--gx', (30 + 55 * Math.abs(Math.sin(p * 5))) + 'vw');
+      glow.style.setProperty('--gy', (14 + 62 * p) + 'vh');
+    }
+    ticking = false;
+  });
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('resize', onScroll);
+onScroll();
+
+/* ---------- Showcase: scroll distance and 3D tilt ---------- */
+safe(function () {
+  function travel() {
+    Array.prototype.forEach.call(document.querySelectorAll('.stage .scroller'), function (sc) {
+      var d = sc.scrollHeight - sc.parentElement.clientHeight; if (d > 0) sc.style.setProperty('--travel', (-d) + 'px');
+    });
+  }
+  travel(); window.addEventListener('resize', travel);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(travel);
+  if (FINE && !RM) {
+    var stage = $('stage'), sin = $('stage-in');
+    stage.addEventListener('pointermove', function (e) {
+      var r = stage.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      sin.style.setProperty('--ry', (x * 12).toFixed(2) + 'deg'); sin.style.setProperty('--rx', (-y * 10).toFixed(2) + 'deg');
+    });
+    stage.addEventListener('pointerleave', function () { sin.style.setProperty('--ry', '0deg'); sin.style.setProperty('--rx', '0deg'); });
+  }
+});
+
+/* ---------- Pointer effects: glow, cursor, magnetic buttons, card tilt ---------- */
+if (FINE && !RM) {
+  safe(function () {
+    var ring = el('div', 'cur'), dot = el('div', 'cur-dot'); ring.setAttribute('aria-hidden', 'true'); dot.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(ring); document.body.appendChild(dot);
+    var tx = -100, ty = -100, rx = -100, ry = -100, hot = false, running = false;
+    function loop() {
+      rx += (tx - rx) * 0.16; ry += (ty - ry) * 0.16;
+      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%) scale(' + (hot ? 1.7 : 1) + ')';
+      requestAnimationFrame(loop);
+    }
+    window.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      tx = e.clientX; ty = e.clientY;
+      dot.style.transform = 'translate(' + tx + 'px,' + ty + 'px) translate(-50%,-50%)';
+      ring.classList.add('on'); dot.classList.add('on');
+      glow.dataset.pointer = '1'; glow.style.setProperty('--gx', tx + 'px'); glow.style.setProperty('--gy', ty + 'px');
+      if (!running) { running = true; loop(); }
+    }, { passive: true });
+    document.addEventListener('pointerover', function (e) {
+      hot = !!(e.target.closest && e.target.closest('a, button, input, select, textarea, label, .tab'));
+      ring.classList.toggle('hot', hot);
+    });
+    document.addEventListener('pointerleave', function () { ring.classList.remove('on'); dot.classList.remove('on'); });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.mag'), function (b) {
+      b.addEventListener('pointermove', function (e) {
+        var r = b.getBoundingClientRect(), x = e.clientX - (r.left + r.width / 2), y = e.clientY - (r.top + r.height / 2);
+        b.style.translate = (x * 0.22).toFixed(1) + 'px ' + (y * 0.32).toFixed(1) + 'px';
+      });
+      b.addEventListener('pointerleave', function () { b.style.translate = '0 0'; });
+    });
+
+    Array.prototype.forEach.call(document.querySelectorAll('.tilt'), function (c) {
+      c.addEventListener('pointermove', function (e) {
+        var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        c.style.setProperty('--mx', (x * 100) + '%'); c.style.setProperty('--my', (y * 100) + '%');
+        c.style.setProperty('--ty', ((x - 0.5) * 8).toFixed(2) + 'deg'); c.style.setProperty('--tx', ((0.5 - y) * 8).toFixed(2) + 'deg');
+      });
+      c.addEventListener('pointerleave', function () { c.style.setProperty('--tx', '0deg'); c.style.setProperty('--ty', '0deg'); });
+    });
+  });
+}
+
+/* ---------- Gold particle field ---------- */
+safe(function () {
+  var cv = $('field'), ctx = cv.getContext('2d'); if (!ctx) return;
+  var dpr = Math.min(2, window.devicePixelRatio || 1), W = 0, H = 0, pts = [], mouse = { x: -999, y: -999 }, visible = true;
+  function size() {
+    W = window.innerWidth; H = window.innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var n = Math.round(Math.min(90, (W * H) / 17000)); pts = [];
+    for (var i = 0; i < n; i++) pts.push({ x: Math.random() * W, y: Math.random() * H, vx: (Math.random() - 0.5) * 0.28, vy: (Math.random() - 0.5) * 0.28, r: 0.7 + Math.random() * 1.5, a: 0.25 + Math.random() * 0.6 });
+  }
+  function draw(move) {
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < pts.length; i++) {
+      var p = pts[i];
+      if (move) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0; if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+        var dx = p.x - mouse.x, dy = p.y - mouse.y, d2 = dx * dx + dy * dy;
+        if (d2 < 14000) { var f = (1 - d2 / 14000) * 0.9; p.x += (dx / Math.sqrt(d2 + 1)) * f; p.y += (dy / Math.sqrt(d2 + 1)) * f; }
+      }
+      ctx.fillStyle = 'rgba(201,164,92,' + p.a + ')'; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 6.2832); ctx.fill();
+      for (var j = i + 1; j < pts.length; j++) {
+        var q = pts[j], ex = p.x - q.x, ey = p.y - q.y, dd = ex * ex + ey * ey;
+        if (dd < 12100) { ctx.strokeStyle = 'rgba(201,164,92,' + (1 - dd / 12100) * 0.2 + ')'; ctx.lineWidth = 0.6; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke(); }
+      }
+    }
+  }
+  size(); window.addEventListener('resize', function () { size(); if (RM) draw(false); });
+  window.addEventListener('pointermove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+  document.addEventListener('visibilitychange', function () { visible = !document.hidden; });
+  if (RM) { draw(false); return; }
+  (function frame() { if (visible) draw(true); requestAnimationFrame(frame); })();
+});
+</script>
+
+</body>
+</html>
