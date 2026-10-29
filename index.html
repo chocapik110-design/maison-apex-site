@@ -769,6 +769,7 @@ var EMAIL = 'contact@maison-apex.eu';
 /* Réception directe des demandes : coller ici l'adresse du formulaire (ex. https://formspree.io/f/xxxxxxxx).
    Vide = le visiteur copie son message et l'envoie lui-même. Ne fonctionne que si la page est hébergée sur un site (pas dans l'aperçu Claude). */
 var FORM_ENDPOINT = 'https://formspree.io/f/xppprblr';
+var WEB3FORMS_KEY = '79f2ba70-2776-4f6b-88c2-6456f11b25d2';
 
 var EXAMPLES = [
   { id: 'auto', name: 'Automobile',
@@ -1111,16 +1112,21 @@ form.addEventListener('submit', function (e) {
   if ($('f-trap').value) return;
   if (!FORM_ENDPOINT) { showFallback(); return; }
   btn.disabled = true; btn.textContent = 'Envoi en cours…';
-  fetch(FORM_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({
-      _subject: 'Nouvelle demande Maison Apex : ' + val('f-name'),
-      nom: val('f-name'), activite: val('f-biz'), vend: val('f-sell'), services: services.join(', '),
-      formule: val('f-offer'), contact: val('f-contact'), message: val('f-msg'), recapitulatif: text
-    })
-  }).then(function (r) {
-    if (!r.ok) throw new Error('http ' + r.status);
+  var payload = {
+    nom: val('f-name'), activite: val('f-biz'), vend: val('f-sell'), services: services.join(', '),
+    formule: val('f-offer'), contact: val('f-contact'), message: val('f-msg'), recapitulatif: text
+  };
+  var subject = 'Nouvelle demande Maison Apex : ' + val('f-name');
+  function post(url, extra) {
+    var body = Object.assign({}, extra, payload);
+    return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return true; });
+  }
+  var sends = [post(FORM_ENDPOINT, { _subject: subject })];
+  if (WEB3FORMS_KEY) sends.push(post('https://api.web3forms.com/submit', { access_key: WEB3FORMS_KEY, subject: subject, from_name: 'Site Maison Apex' }));
+  Promise.all(sends.map(function (p) { return p.then(function () { return true; }, function () { return false; }); }))
+  .then(function (res) {
+    if (res.indexOf(true) === -1) throw new Error('send failed');
     burst(btn); play('chime');
     form.hidden = true; $('sent').hidden = false;
     $('sent').scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'center' });
