@@ -242,6 +242,30 @@ html.js .rv.in.done { transition: transform .25s ease-out, border-color .3s, box
 .price { font-family: var(--display); font-size: clamp(28px, 3vw, 34px); color: var(--gold); line-height: 1.15; font-variant-numeric: tabular-nums; }
 .price small { display: block; font-family: var(--body); font-size: 13px; color: var(--muted); letter-spacing: 0.02em; }
 .offer p { color: var(--muted); font-size: 15px; flex: 1; }
+/* À la carte */
+.carte { margin-top: 56px; display: grid; gap: 22px; }
+.carte-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px 24px; }
+.carte-head h3 { font-family: var(--display); font-weight: 400; font-size: clamp(26px, 3vw, 34px); }
+.carte-head h3 em { color: var(--gold); }
+.carte-head p { color: var(--muted); font-size: 15px; max-width: 46ch; }
+.carte-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+@media (min-width: 860px) { .carte-grid { grid-template-columns: repeat(3, 1fr); } }
+.carte-col { background: var(--panel); border: 1px solid var(--line); padding: 22px 24px; min-width: 0; }
+.carte-col h4 { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 8px; }
+.item { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.item:last-child { border-bottom: 0; }
+.item div { min-width: 0; }
+.item b { display: block; font-weight: 500; font-size: 15px; }
+.item span.d { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; }
+.item .pr { font-family: var(--display); color: var(--gold); font-size: 20px; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; }
+.item .pr small { display: block; font-family: var(--body); font-size: 11px; color: var(--muted); }
+.save { display: grid; gap: 14px; grid-template-columns: 1fr; border: 1px solid var(--gold-deep); background: linear-gradient(120deg, rgba(201,164,92,.12), rgba(21,19,17,.9) 60%); padding: 22px 24px; }
+@media (min-width: 860px) { .save { grid-template-columns: 1.4fr 1fr 1fr; align-items: center; } }
+.save .lbl { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+.save .bigline { font-family: var(--display); font-size: clamp(22px, 2.6vw, 28px); line-height: 1.2; margin-top: 6px; }
+.save .cmp { font-size: 14px; color: var(--muted); }
+.save .cmp s { color: var(--muted); }
+.save .cmp strong { display: block; font-family: var(--display); font-weight: 400; font-size: 26px; color: var(--gold); margin-top: 2px; }
 .pick { align-self: flex-start; margin-top: 6px; min-height: 44px; padding: 0 20px; background: transparent; color: var(--gold); border: 1px solid var(--gold-deep); cursor: pointer; font-family: var(--body); font-size: 14px; font-weight: 500; transition: background .25s, color .25s, border-color .25s; }
 .pick:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
 
@@ -572,6 +596,42 @@ html:not(.js) .big { opacity: 1; transform: none; clip-path: none; }
       </article>
     </div>
     <p class="note">Tarifs de départ, ajustés après échange selon votre activité.</p>
+
+    <div class="carte" id="carte">
+      <div class="carte-head rv">
+        <h3>Ou <em>à la carte</em>, pour un besoin ponctuel.</h3>
+        <p>Une vidéo pour un mariage, une pub pour un lancement, une annonce à refaire : on s'en occupe à l'unité, sans abonnement.</p>
+      </div>
+      <div class="carte-grid">
+        <div class="carte-col rv" style="--d:0s">
+          <h4>Contenu</h4>
+          <div class="item"><div><b>Post réseaux sociaux</b><span class="d">Visuel + légende + hashtags</span></div><div class="pr">29 €</div></div>
+          <div class="item"><div><b>Annonce rédigée</b><span class="d">Texte vendeur, mise en valeur du bien ou produit</span></div><div class="pr">25 €</div></div>
+          <div class="item"><div><b>Visuel produit premium</b><span class="d">Détourage, fond studio, retouche</span></div><div class="pr">19 €<small>par photo</small></div></div>
+        </div>
+        <div class="carte-col rv" style="--d:.08s">
+          <h4>Vidéo</h4>
+          <div class="item"><div><b>Vidéo courte</b><span class="d">Reel / TikTok de 15 à 30 s, monté pour vous</span></div><div class="pr">79 €</div></div>
+          <div class="item"><div><b>Vidéo publicitaire sur mesure</b><span class="d">30 à 60 s, voix off, musique, animations</span></div><div class="pr">249 €<small>à partir de</small></div></div>
+          <div class="item"><div><b>Vidéo souvenir d'événement</b><span class="d">Mariage, anniversaire, inauguration : 1 à 3 min à partir de vos photos et vidéos</span></div><div class="pr">290 €<small>à partir de</small></div></div>
+        </div>
+        <div class="carte-col rv" style="--d:.16s">
+          <h4>Site & automatisation</h4>
+          <div class="item"><div><b>Mise à jour du site</b><span class="d">Texte, photos, prix, nouvelle offre</span></div><div class="pr">49 €<small>par modification</small></div></div>
+          <div class="item"><div><b>Page supplémentaire</b><span class="d">Ajoutée à votre site existant</span></div><div class="pr">190 €</div></div>
+          <div class="item"><div><b>Assistant de réponses automatiques</b><span class="d">Mise en place, puis maintenance mensuelle</span></div><div class="pr">590 €<small>+ 69 €/mois</small></div></div>
+        </div>
+      </div>
+      <div class="save rv">
+        <div><div class="lbl">Le calcul est vite fait</div><div class="bigline">8 posts, 8 annonces et 3 vidéos chaque mois.</div></div>
+        <div class="cmp">À la carte<strong><s>669 €</s></strong></div>
+        <div class="cmp">Avec l'Essentiel<strong>290 €/mois · −57 %</strong></div>
+      </div>
+      <div class="rv" style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between">
+        <p class="note" style="margin:0">Prix par unité. Vidéos souvenir et pubs sur mesure : devis selon la durée et les éléments fournis.</p>
+        <button class="pick" type="button" data-offer="À la carte">Demander un devis à la carte</button>
+      </div>
+    </div>
   </section>
 
   <section class="sec container" id="methode">
@@ -650,6 +710,7 @@ html:not(.js) .big { opacity: 1; transform: none; clip-path: none; }
                 <option>Essentiel</option>
                 <option>Pro</option>
                 <option>Premium</option>
+                <option>À la carte</option>
               </select>
             </div>
             <div class="field">
